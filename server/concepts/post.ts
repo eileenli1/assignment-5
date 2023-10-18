@@ -9,7 +9,7 @@ export interface PostOptions {
 
 export interface PostDoc extends BaseDoc {
   author: ObjectId;
-  content: string;
+  content: string; // the content in each post represents a url pointing to an image
   options?: PostOptions;
 }
 
@@ -26,6 +26,16 @@ export default class PostConcept {
       sort: { dateUpdated: -1 },
     });
     return posts;
+  }
+
+  async getPostIdsByAuthor(author: ObjectId) {
+    const posts = await this.getByAuthor(author);
+
+    return posts.map((post) => post._id);
+  }
+
+  async getPostById(_id: ObjectId) {
+    return await this.posts.readOne({ _id });
   }
 
   async getByAuthor(author: ObjectId) {
