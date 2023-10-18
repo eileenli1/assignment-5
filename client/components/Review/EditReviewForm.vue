@@ -22,6 +22,7 @@ const editReview = async (link: string, content: string) => {
 <template>
   <form @submit.prevent="editReview(link, content)">
     <p class="author">{{ props.review.author }}</p>
+    <textarea id="link" v-model="link" placeholder="Enter the link of the item you're reviewing." required> </textarea>
     <textarea id="content" v-model="content" placeholder="Create a review!" required> </textarea>
     <div class="base">
       <menu>
