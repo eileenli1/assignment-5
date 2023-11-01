@@ -1,32 +1,39 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { fetchy } from "../../utils/fetchy";
+import ImageUploader from "./ImageUploader.vue";
 
-const content = ref("");
+const imageContent = ref("");
 const emit = defineEmits(["refreshPosts"]);
 
-const createPost = async (content: string) => {
-  try {
-    await fetchy("/api/posts", "POST", {
-      body: { content },
-    });
-  } catch (_) {
-    return;
+const createPost = async () => {
+  if (imageContent.value) {
+    try {
+      await fetchy("/api/posts", "POST", {
+        body: { content: imageContent.value },
+      });
+    } catch (_) {
+      return;
+    }
+    emit("refreshPosts");
+    emptyForm();
   }
-  emit("refreshPosts");
-  emptyForm();
 };
 
 const emptyForm = () => {
-  content.value = "";
+  imageContent.value = "";
+};
+
+const handleImageUpload = (url: string) => {
+  imageContent.value = url;
 };
 </script>
 
 <template>
-  <form @submit.prevent="createPost(content)">
+  <form @submit.prevent="createPost()">
     <label for="content">Post Contents:</label>
-    <textarea id="content" v-model="content" placeholder="Create a post!" required> </textarea>
-    <button type="submit" class="pure-button-primary pure-button">Create Post</button>
+    <ImageUploader @uploadImage="handleImageUpload" />
+    <button type="submit" class="pure-button-primary pure-button" v-if="imageContent">Create Post</button>
   </form>
 </template>
 

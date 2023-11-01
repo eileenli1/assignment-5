@@ -2,6 +2,7 @@
 import { useUserStore } from "@/stores/user";
 import { formatDate } from "@/utils/formatDate";
 import { storeToRefs } from "pinia";
+import { defineEmits, defineProps } from "vue";
 import { fetchy } from "../../utils/fetchy";
 
 const props = defineProps(["post"]);
@@ -16,11 +17,13 @@ const deletePost = async () => {
   }
   emit("refreshPosts");
 };
+
+console.log("Content of props.post.content:", props.post.content);
 </script>
 
 <template>
   <p class="author">{{ props.post.author }}</p>
-  <p>{{ props.post.content }}</p>
+  <img :src="props.post.content" alt="photo" />
   <div class="base">
     <menu v-if="props.post.author == currentUsername">
       <li><button class="btn-small pure-button" @click="emit('editPost', props.post._id)">Edit</button></li>

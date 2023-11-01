@@ -2,6 +2,8 @@
 import CreateReviewForm from "@/components/Review/CreateReviewForm.vue";
 import EditReviewForm from "@/components/Review/EditReviewForm.vue";
 import ReviewComponent from "@/components/Review/ReviewComponent.vue";
+import SearchReviewForm from "./SearchReviewForm.vue";
+
 import { useUserStore } from "@/stores/user";
 import { fetchy } from "@/utils/fetchy";
 import { storeToRefs } from "pinia";
@@ -44,7 +46,7 @@ onBeforeMount(async () => {
   <div class="row">
     <h2 v-if="!searchAuthor">Reviews:</h2>
     <h2 v-else>Reviews by {{ searchAuthor }}:</h2>
-    <SearchPostForm @getReviewsByAuthor="getReviews" />
+    <SearchReviewForm @getReviewsByAuthor="getReviews" />
   </div>
   <section class="reviews" v-if="loaded && reviews.length !== 0">
     <article v-for="review in reviews" :key="review._id">

@@ -1,8 +1,13 @@
 /* Add some global styles here! */
+/* Add some global styles here! */
+
+body {
+  font-family: 'Didot', 'serif'; 
+} 
 
 :root {
   --red: rgb(208, 67, 12);
-  --base-bg: #f1f3f5;
+  --base-bg: #D8E2DC;
 }
 
 button.btn-small {

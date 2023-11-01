@@ -20,6 +20,7 @@ const createReview = async (link: string, content: string) => {
 
 const emptyForm = () => {
   content.value = "";
+  link.value = "";
 };
 </script>
 

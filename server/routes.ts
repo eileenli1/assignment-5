@@ -26,6 +26,11 @@ class Routes {
     return await User.getUserByUsername(username);
   }
 
+  @Router.get("/userId/:userId")
+  async getUsername(userId: ObjectId) {
+    return await User.getUserById(userId);
+  }
+
   @Router.post("/users")
   async createUser(session: WebSessionDoc, username: string, password: string) {
     WebSession.isLoggedOut(session);
