@@ -34,7 +34,9 @@ const fetchData = async () => {
 console.log(linkPreviewData);
 onMounted(() => {
   if (props.review.link) {
-    fetchData(props.review.link);
+    fetchData().catch((error) => {
+      console.log("Error fetching link preview:", error);
+    });
   }
 });
 </script>
