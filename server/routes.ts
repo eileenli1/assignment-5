@@ -227,8 +227,12 @@ class Routes {
   async getReviews(author?: string) {
     let reviews;
     if (author) {
-      const id = (await User.getUserByUsername(author))._id;
-      reviews = await Review.getByAuthor(id);
+      try {
+        const id = (await User.getUserByUsername(author))._id;
+        reviews = await Review.getByAuthor(id);
+      } catch (error) {
+        reviews = await Review.getByStore(author);
+      }
     } else {
       reviews = await Review.getReviews({});
     }

@@ -2,7 +2,6 @@
 import CreateReviewForm from "@/components/Review/CreateReviewForm.vue";
 import EditReviewForm from "@/components/Review/EditReviewForm.vue";
 import ReviewComponent from "@/components/Review/ReviewComponent.vue";
-import SearchReviewByStoreForm from "./SearchReviewByStoreForm.vue";
 import SearchReviewForm from "./SearchReviewForm.vue";
 
 import { useUserStore } from "@/stores/user";
@@ -15,32 +14,19 @@ const { isLoggedIn } = storeToRefs(useUserStore());
 const loaded = ref(false);
 let reviews = ref<Array<Record<string, string>>>([]);
 let editing = ref("");
-let searchAuthor = ref("");
-let searchStore = ref("");
-let reviewsByStore = ref<Array<Record<string, string>>>([]);
+let search = ref("");
 
-async function getReviews(author?: string) {
-  let query: Record<string, string> = author !== undefined ? { author } : {};
+async function getReviews(keyword?: string) {
+  let query: Record<string, string> = keyword !== undefined ? { author: keyword } : {};
+  console.log("Query:", query); // Debug line
   let reviewResults;
   try {
     reviewResults = await fetchy("/api/reviews", "GET", { query });
   } catch (_) {
     return;
   }
-  searchAuthor.value = author ? author : "";
+  search.value = keyword ? keyword : "";
   reviews.value = reviewResults;
-}
-
-async function getReviewsByStore(store?: string) {
-  let query: Record<string, string> = store !== undefined ? { store } : {};
-  let reviewResults;
-  try {
-    reviewResults = await fetchy("/api/reviews/store", "GET", { query });
-  } catch (_) {
-    return;
-  }
-  searchStore.value = store ? store : "";
-  reviewsByStore.value = reviewResults;
 }
 
 function updateEditing(id: string) {
@@ -51,9 +37,6 @@ onBeforeMount(async () => {
   await getReviews();
   loaded.value = true;
 });
-
-console.log("HI");
-console.log(reviewsByStore.value);
 </script>
 
 <template>
@@ -62,16 +45,13 @@ console.log(reviewsByStore.value);
     <CreateReviewForm @refreshReviews="getReviews" />
   </section>
   <div class="row">
-    <h2 v-if="!searchAuthor && !searchStore">Reviews:</h2>
-    <h2 v-else-if="searchAuthor">Reviews by {{ searchAuthor }}:</h2>
-    <h2 v-else>Reviews of items from {{ searchStore }}</h2>
+    <h2 v-if="!search">Reviews:</h2>
+    <h2 v-else>Reviews from {{ search }}:</h2>
     <SearchReviewForm @getReviewsByAuthor="getReviews" />
-    <SearchReviewByStoreForm @getReviewsByStore="getReviewsByStore" />
   </div>
-  <section class="reviews" v-if="loaded && (reviews.length !== 0 || reviewsByStore.length !== 0)">
-    <article v-for="review in searchStore ? reviewsByStore : reviews" :key="review._id">
-      <ReviewComponent v-if="editing !== review._id && !searchStore" :review="review" @refreshReviews="getReviews" @editReview="updateEditing" />
-      <ReviewComponent v-else-if="editing !== review._id && searchStore" :review="review" @refreshReviews="getReviewsByStore" @editReview="updateEditing" />
+  <section class="reviews" v-if="loaded && reviews.length !== 0">
+    <article v-for="review in reviews" :key="review._id">
+      <ReviewComponent v-if="editing !== review._id" :review="review" @refreshReviews="getReviews" @editReview="updateEditing" />
       <EditReviewForm v-else :review="review" @refreshReviews="getReviews" @editPost="updateEditing" />
     </article>
   </section>

@@ -8,8 +8,8 @@ const emit = defineEmits(["getReviewsByAuthor"]);
 <template>
   <form @submit.prevent="emit('getReviewsByAuthor', author)" class="pure-form">
     <fieldset>
-      <legend>Search by Author</legend>
-      <input id="author" type="text" v-model="author" placeholder="Username" />
+      <legend>Search by Keyword</legend>
+      <input id="author" type="text" v-model="author" placeholder="Username or store" />
       <button type="submit" class="pure-button pure-button-primary">Search</button>
     </fieldset>
   </form>
